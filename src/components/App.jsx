@@ -225,42 +225,22 @@ export default function App() {
         .gh-card{background:${T.surface};border:1px solid ${T.border};border-radius:12px}
         .row-hover:hover{background:${T.surfaceHover}}
         .spinning{animation:spin 0.85s linear infinite;width:13px;height:13px;border:2px solid rgba(255,255,255,0.2);border-top:2px solid #fff;border-radius:50%;display:inline-block;flex-shrink:0}
-        
-        /* Mobile responsive navbar */
-        @media (max-width: 768px) {
-          header { padding: 0 12px !important; height: 56px !important; }
-          .navbar-logo { gap: 8px !important; }
-          .navbar-logo-icon { width: 24px !important; height: 24px !important; }
-          .navbar-logo-text { font-size: 13px !important; }
-          .navbar-version { font-size: 8px !important; padding: 1px 6px !important; }
-          .navbar-badges { display: none; }
-        }
-        
-        @media (max-width: 480px) {
-          header { padding: 0 8px !important; height: 50px !important; }
-          .navbar-logo { gap: 6px !important; }
-          .navbar-logo-icon { width: 20px !important; height: 20px !important; }
-          .navbar-logo-text { font-size: 12px !important; }
-          .navbar-version { display: none; }
-        }
       `}</style>
 
       <header style={{ background:"#010409", borderBottom:`1px solid ${T.border}`, padding:"0 24px", height:62, display:"flex", alignItems:"center", justifyContent:"space-between", position:"sticky", top:0, zIndex:200 }}>
-        <div className="navbar-logo" style={{ display:"flex", alignItems:"center", gap:12 }}>
-          <div className="navbar-logo-icon" style={{ width:32, height:32 }}>
-            <CILogo size={32} />
-          </div>
-          <span className="navbar-logo-text" style={{ color:T.text, fontWeight:700, fontSize:15 }}>
+        <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+          <CILogo size={32} />
+          <span style={{ color:T.text, fontWeight:700, fontSize:15 }}>
             {APP_NAME.split(".")[0]}
             <span style={{ background:"linear-gradient(90deg,#3fb950,#58a6ff)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
               .{APP_NAME.split(".")[1]}
             </span>
           </span>
-          <span className="navbar-version" style={{ background:T.greenBg, color:T.green, border:`1px solid ${T.greenBorder}`, borderRadius:20, padding:"1px 9px", fontSize:10, fontWeight:700, fontFamily:"'Geist Mono',monospace" }}>
+          <span style={{ background:T.greenBg, color:T.green, border:`1px solid ${T.greenBorder}`, borderRadius:20, padding:"1px 9px", fontSize:10, fontWeight:700, fontFamily:"'Geist Mono',monospace" }}>
             {APP_VERSION}
           </span>
         </div>
-        <div className="navbar-badges" style={{ display:"flex", gap:6, flexWrap:"wrap", justifyContent:"flex-end" }}>
+        <div style={{ display:"flex", gap:6, flexWrap:"wrap", justifyContent:"flex-end" }}>
           {["Cache","Share","Quick Actions","Health Score","Ask the Repo"].map(c => (
             <span key={c} style={{ fontSize:10, padding:"2px 8px", borderRadius:999, background:T.surface, border:`1px solid ${T.border}`, color:T.green, fontFamily:"'Geist Mono',monospace", fontWeight:600 }}>{c}</span>
           ))}
