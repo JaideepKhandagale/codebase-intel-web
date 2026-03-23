@@ -230,6 +230,23 @@ export default function App() {
         @media (max-width: 768px) {
           .navbar-badges { display: none !important; }
         }
+        
+        /* Responsive hero headline */
+        .hero-headline {
+          font-size: clamp(32px, 6.5vw, 88px);
+        }
+        
+        @media (max-width: 768px) {
+          .hero-headline {
+            font-size: clamp(28px, 7vw, 64px) !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .hero-headline {
+            font-size: clamp(24px, 8vw, 48px) !important;
+          }
+        }
       `}</style>
 
       <header style={{ background:"#010409", borderBottom:`1px solid ${T.border}`, padding:"0 24px", height:62, display:"flex", alignItems:"center", justifyContent:"space-between", position:"sticky", top:0, zIndex:200 }}>
@@ -262,7 +279,7 @@ export default function App() {
                   <span style={{ width:7, height:7, borderRadius:"50%", background:T.green, display:"inline-block", animation:"blink 2s ease-in-out infinite" }} />
                   <span style={{ fontSize:11, color:"#9ff5ae", fontWeight:700, letterSpacing:"0.08em", fontFamily:"'Geist Mono',monospace" }}>AI-POWERED CODEBASE INTELLIGENCE</span>
                 </div>
-                <div style={{ position:"relative", marginBottom:16, fontSize:"clamp(46px,7vw,88px)", fontWeight:900, letterSpacing:"-0.06em", lineHeight:0.95, background:"linear-gradient(90deg,#9be7ff 0%,#58a6ff 38%,#78a6ff 64%,#bc8cff 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
+                <div className="hero-headline" style={{ position:"relative", marginBottom:16, fontWeight:900, letterSpacing:"-0.06em", lineHeight:0.95, background:"linear-gradient(90deg,#9be7ff 0%,#58a6ff 38%,#78a6ff 64%,#bc8cff 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
                   {APP_NAME}
                 </div>
                 <div style={{ width:120, height:1, margin:"0 auto 18px", background:"linear-gradient(90deg,rgba(63,185,80,0),rgba(88,166,255,0.95),rgba(188,140,255,0))" }} />
