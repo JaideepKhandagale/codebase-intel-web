@@ -225,6 +225,11 @@ export default function App() {
         .gh-card{background:${T.surface};border:1px solid ${T.border};border-radius:12px}
         .row-hover:hover{background:${T.surfaceHover}}
         .spinning{animation:spin 0.85s linear infinite;width:13px;height:13px;border:2px solid rgba(255,255,255,0.2);border-top:2px solid #fff;border-radius:50%;display:inline-block;flex-shrink:0}
+        
+        /* Mobile responsive badges - right side only */
+        @media (max-width: 768px) {
+          .navbar-badges { display: none !important; }
+        }
       `}</style>
 
       <header style={{ background:"#010409", borderBottom:`1px solid ${T.border}`, padding:"0 24px", height:62, display:"flex", alignItems:"center", justifyContent:"space-between", position:"sticky", top:0, zIndex:200 }}>
@@ -240,7 +245,7 @@ export default function App() {
             {APP_VERSION}
           </span>
         </div>
-        <div style={{ display:"flex", gap:6, flexWrap:"wrap", justifyContent:"flex-end" }}>
+        <div className="navbar-badges" style={{ display:"flex", gap:6, flexWrap:"wrap", justifyContent:"flex-end" }}>
           {["Cache","Share","Quick Actions","Health Score","Ask the Repo"].map(c => (
             <span key={c} style={{ fontSize:10, padding:"2px 8px", borderRadius:999, background:T.surface, border:`1px solid ${T.border}`, color:T.green, fontFamily:"'Geist Mono',monospace", fontWeight:600 }}>{c}</span>
           ))}
