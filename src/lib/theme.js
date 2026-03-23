@@ -1,0 +1,26 @@
+export const theme = {
+  bg: "#0d1117",
+  surface: "#161b22",
+  surfaceHover: "#1c2128",
+  surfaceSoft: "#0f1720",
+  border: "#30363d",
+  borderHover: "#6e7681",
+  text: "#e6edf3",
+  textMuted: "#8b949e",
+  textDim: "#484f58",
+  green: "#3fb950",
+  greenBg: "#0d4429",
+  greenBorder: "#238636",
+  blue: "#58a6ff",
+  blueBg: "#0c2d6b",
+  blueBorder: "#1f6feb",
+  purple: "#bc8cff",
+  purpleBg: "#1e1340",
+  purpleBorder: "#553098",
+  orange: "#ffa657",
+  red: "#ff7b72",
+  redBg: "#490202",
+  yellow: "#e3b341",
+};
+
+export const fonts = `@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@300;400;500;600;700;800&display=swap');`;
