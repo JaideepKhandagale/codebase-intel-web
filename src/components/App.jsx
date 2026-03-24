@@ -39,6 +39,10 @@ function setBrowserView(view, mode = "push") {
   window.history[mode === "replace" ? "replaceState" : "pushState"]({ appView: view }, "", window.location.href);
 }
 
+function makeMessageId(prefix) {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
 export default function App() {
   const [url, setUrl] = useState("");
   const [phase, setPhase] = useState("idle");
@@ -128,13 +132,30 @@ export default function App() {
     if (!q || !result || chatLoading) return;
     chatAbortRef.current?.abort();
     const controller = new AbortController(); chatAbortRef.current = controller;
+    const assistantId = makeMessageId("ai");
     if (question === chatInput) setChatInput("");
-    setChatLoading(true); setChatHistory(p => [...p, { role: "user", text: q }]);
+    setChatLoading(true);
+    setChatHistory(p => [...p, { id: makeMessageId("user"), role: "user", text: q }, { id: assistantId, role: "ai", text: "" }]);
     try {
-      const answer = await askRepoQuestion({ question: q, repoContext: result, signal: controller.signal });
-      setChatHistory(p => [...p, { role: "ai", text: answer }]);
+      const answer = await askRepoQuestion({
+        question: q,
+        repoContext: result,
+        signal: controller.signal,
+        onChunk: (_, fullText) => {
+          setChatHistory(prev => prev.map(message => (
+            message.id === assistantId ? { ...message, text: fullText } : message
+          )));
+        },
+      });
+      setChatHistory(prev => prev.map(message => (
+        message.id === assistantId ? { ...message, text: answer || "No response." } : message
+      )));
     } catch (err) {
-      setChatHistory(p => [...p, { role: "ai", text: err.name === "AbortError" ? "Canceled." : `Error: ${err.message}`, isErr: true }]);
+      setChatHistory(prev => prev.map(message => (
+        message.id === assistantId
+          ? { ...message, text: err.name === "AbortError" ? "Canceled." : `Error: ${err.message}`, isErr: true }
+          : message
+      )));
     } finally { setChatLoading(false); }
   };
 
@@ -142,12 +163,27 @@ export default function App() {
     if (!result) return;
     chatAbortRef.current?.abort();
     const controller = new AbortController(); chatAbortRef.current = controller;
+    const assistantId = makeMessageId("ai");
     setActiveQuickAction(actionId); setTab("chat"); setChatLoading(true);
+    setChatHistory(p => [...p, { id: makeMessageId("user"), role: "user", text: actionId }, { id: assistantId, role: "ai", text: "" }]);
     try {
-      const answer = await runQuickAction({ actionId, repoContext: result, signal: controller.signal });
-      setChatHistory(p => [...p, { role: "user", text: actionId }, { role: "ai", text: answer }]);
+      const answer = await runQuickAction({
+        actionId,
+        repoContext: result,
+        signal: controller.signal,
+        onChunk: (_, fullText) => {
+          setChatHistory(prev => prev.map(message => (
+            message.id === assistantId ? { ...message, text: fullText } : message
+          )));
+        },
+      });
+      setChatHistory(prev => prev.map(message => (
+        message.id === assistantId ? { ...message, text: answer || "No response." } : message
+      )));
     } catch (err) {
-      setChatHistory(p => [...p, { role: "ai", text: `Error: ${err.message}`, isErr: true }]);
+      setChatHistory(prev => prev.map(message => (
+        message.id === assistantId ? { ...message, text: `Error: ${err.message}`, isErr: true } : message
+      )));
     } finally { setChatLoading(false); setActiveQuickAction(""); }
   };
 
@@ -155,12 +191,30 @@ export default function App() {
     if (!result) return;
     chatAbortRef.current?.abort();
     const controller = new AbortController(); chatAbortRef.current = controller;
+    const assistantId = makeMessageId("ai");
+    const prefix = `File: ${file}\n\n`;
+    setChatHistory(p => [...p, { id: assistantId, role: "ai", text: prefix }]);
     try {
-      const answer = await explainFile({ file, repoContext: result, signal: controller.signal });
-      setChatHistory(p => [...p, { role: "ai", text: `📄 ${file}\n\n${answer}` }]);
+      const answer = await explainFile({
+        file,
+        repoContext: result,
+        signal: controller.signal,
+        onChunk: (_, fullText) => {
+          setChatHistory(prev => prev.map(message => (
+            message.id === assistantId ? { ...message, text: `${prefix}${fullText}` } : message
+          )));
+        },
+      });
+      setChatHistory(prev => prev.map(message => (
+        message.id === assistantId ? { ...message, text: `${prefix}${answer || "No response."}` } : message
+      )));
       setTab("chat");
     } catch (err) {
-      if (err.name !== "AbortError") setChatHistory(p => [...p, { role: "ai", text: err.message, isErr: true }]);
+      setChatHistory(prev => prev.map(message => (
+        message.id === assistantId
+          ? { ...message, text: err.name === "AbortError" ? "Canceled." : err.message, isErr: err.name !== "AbortError" }
+          : message
+      )));
     }
   };
 

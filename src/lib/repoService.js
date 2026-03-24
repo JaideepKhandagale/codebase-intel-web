@@ -1,4 +1,4 @@
-import { callAnalyzeAPI, generateText, geminiGenerateContent } from "./gemini";
+import { callAnalyzeAPI, generateText, generateTextStream, geminiGenerateContent } from "./gemini";
 import { extractOutputText, normalizeAnalysis, repairJSON } from "./normalize";
 
 export function parseRepoUrl(url) {
@@ -44,8 +44,9 @@ export async function analyzeRepository({ url, signal, onLog }) {
   return normalizeAnalysis(parsed, repoKey);
 }
 
-export async function askRepoQuestion({ question, repoContext, signal }) {
-  const text = await generateText({
+export async function askRepoQuestion({ question, repoContext, signal, onChunk }) {
+  const generator = onChunk ? generateTextStream : generateText;
+  const text = await generator({
     input: `You are a codebase expert. Answer using only the analysis provided. Be concise, under 180 words. Cite file paths when relevant.
 
 Repository Analysis:
@@ -54,6 +55,7 @@ ${JSON.stringify(repoContext, null, 2)}
 Question: ${question}`,
     maxOutputTokens: 1000,
     signal,
+    onChunk,
   });
   return text || "No response.";
 }
@@ -66,16 +68,17 @@ const QUICK_ACTION_PROMPTS = {
   risks: "List the riskiest areas to change. Give severity, why each is risky, and the most relevant files.",
 };
 
-export async function runQuickAction({ actionId, repoContext, signal }) {
+export async function runQuickAction({ actionId, repoContext, signal, onChunk }) {
   const prompt = QUICK_ACTION_PROMPTS[actionId];
   if (!prompt) throw new Error("Unknown quick action.");
-  return askRepoQuestion({ question: prompt, repoContext, signal });
+  return askRepoQuestion({ question: prompt, repoContext, signal, onChunk });
 }
 
-export async function explainFile({ file, repoContext, signal }) {
+export async function explainFile({ file, repoContext, signal, onChunk }) {
   return askRepoQuestion({
     question: `Explain the role of ${file}. Cover why it matters, what it depends on, and what changes here could break.`,
     repoContext,
     signal,
+    onChunk,
   });
 }
