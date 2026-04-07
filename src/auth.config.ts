@@ -1,7 +1,6 @@
 import type { NextAuthConfig } from "next-auth"
 import Google from "next-auth/providers/google"
 import GitHub from "next-auth/providers/github"
-import Credentials from "next-auth/providers/credentials"
 
 export const authConfig: NextAuthConfig = {
   providers: [
@@ -12,15 +11,6 @@ export const authConfig: NextAuthConfig = {
     GitHub({
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-    }),
-    Credentials({
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize() {
-        return null
-      },
     }),
   ],
   pages: {
