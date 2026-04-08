@@ -223,6 +223,7 @@ export default function AuthPage() {
       </div>
 
       <div
+        className={styles.rightPanel}
         style={{
           width: "460px",
           display: "flex",
@@ -233,12 +234,14 @@ export default function AuthPage() {
           zIndex: 1,
         }}
       >
+        <div className={styles.sideGlow} />
         <div
+          className={styles.authCard}
           style={{
             width: "100%",
             borderRadius: "16px",
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            background: "linear-gradient(180deg, rgba(14,18,30,0.86), rgba(8,11,20,0.88))",
+            border: "1px solid rgba(148,163,184,0.12)",
             padding: "32px",
           }}
         >

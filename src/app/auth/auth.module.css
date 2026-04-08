@@ -122,6 +122,58 @@
   z-index: 1;
 }
 
+.rightPanel {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.rightPanel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(6, 10, 20, 0.5), rgba(3, 5, 12, 0.84)),
+    radial-gradient(circle at 18% 18%, rgba(34, 211, 238, 0.08), transparent 34%),
+    radial-gradient(circle at 78% 80%, rgba(139, 92, 246, 0.1), transparent 36%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.rightPanel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0.22;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sideGlow {
+  position: absolute;
+  inset: 14% 10% 12% 14%;
+  border-radius: 36px;
+  background:
+    radial-gradient(circle at 28% 24%, rgba(34, 211, 238, 0.12), transparent 28%),
+    radial-gradient(circle at 78% 72%, rgba(139, 92, 246, 0.16), transparent 32%);
+  filter: blur(24px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.authCard {
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
 @keyframes pulseShift {
   0% {
     opacity: 0.6;
@@ -176,6 +228,10 @@
 @media (max-width: 900px) {
   .meshLayer {
     display: none;
+  }
+
+  .rightPanel::after {
+    opacity: 0.1;
   }
 
   .circuitBackdrop::before,
