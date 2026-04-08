@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { signOut } from "next-auth/react";
 import { APP_NAME, APP_VERSION, EXAMPLE_REPOS, GEMINI_CONFIG } from "../config/appConfig";
 import { fonts, theme } from "../lib/theme";
 import { buildShareUrl, loadSharedResult, parseSharePayload, saveShareResult } from "../lib/share";
@@ -41,6 +42,10 @@ function setBrowserView(view, mode = "push") {
 
 function makeMessageId(prefix) {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+async function handleLogout() {
+  await signOut({ callbackUrl: "/auth" });
 }
 
 export default function App() {
@@ -316,10 +321,28 @@ export default function App() {
             {APP_VERSION}
           </span>
         </div>
-        <div className="navbar-badges" style={{ display:"flex", gap:6, flexWrap:"wrap", justifyContent:"flex-end" }}>
-          {["Cache","Share","Quick Actions","Health Score","Ask the Repo"].map(c => (
-            <span key={c} style={{ fontSize:10, padding:"2px 8px", borderRadius:999, background:T.surface, border:`1px solid ${T.border}`, color:T.green, fontFamily:"'Geist Mono',monospace", fontWeight:600 }}>{c}</span>
-          ))}
+        <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+          <div className="navbar-badges" style={{ display:"flex", gap:6, flexWrap:"wrap", justifyContent:"flex-end" }}>
+            {["Cache","Share","Quick Actions","Health Score","Ask the Repo"].map(c => (
+              <span key={c} style={{ fontSize:10, padding:"2px 8px", borderRadius:999, background:T.surface, border:`1px solid ${T.border}`, color:T.green, fontFamily:"'Geist Mono',monospace", fontWeight:600 }}>{c}</span>
+            ))}
+          </div>
+          <button
+            onClick={handleLogout}
+            style={{
+              background:T.surface,
+              border:`1px solid ${T.border}`,
+              color:T.text,
+              borderRadius:8,
+              padding:"8px 12px",
+              fontSize:12,
+              fontWeight:600,
+              cursor:"pointer",
+              fontFamily:"'Geist Mono',monospace"
+            }}
+          >
+            Log out
+          </button>
         </div>
       </header>
 

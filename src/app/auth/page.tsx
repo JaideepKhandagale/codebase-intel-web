@@ -151,12 +151,13 @@ export default function AuthPage() {
 
           <h1
             style={{
-              fontSize: "52px",
+              fontSize: "46px",
               fontWeight: 800,
-              lineHeight: 1.1,
+              lineHeight: 1.02,
               color: "#fff",
               marginBottom: "20px",
-              maxWidth: "500px",
+              maxWidth: "560px",
+              letterSpacing: "-0.04em",
             }}
           >
             Understand any{" "}
