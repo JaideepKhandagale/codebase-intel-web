@@ -1,0 +1,186 @@
+.leftPanel {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.circuitBackdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 16% 20%, rgba(34, 211, 238, 0.18), transparent 30%),
+    radial-gradient(circle at 78% 32%, rgba(59, 130, 246, 0.14), transparent 34%),
+    radial-gradient(circle at 58% 78%, rgba(99, 102, 241, 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.08), rgba(2, 6, 23, 0.45)),
+    linear-gradient(135deg, rgba(2, 6, 23, 0.92), rgba(3, 7, 18, 0.72));
+}
+
+.circuitBackdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.55));
+  opacity: 0.42;
+}
+
+.circuitBackdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, transparent 15%, rgba(56, 189, 248, 0.14) 18%, transparent 21%),
+    linear-gradient(90deg, transparent 64%, rgba(34, 211, 238, 0.16) 66%, transparent 68%),
+    linear-gradient(180deg, transparent 28%, rgba(59, 130, 246, 0.12) 30%, transparent 32%),
+    linear-gradient(180deg, transparent 72%, rgba(168, 85, 247, 0.12) 74%, transparent 76%);
+  filter: blur(0.4px);
+  opacity: 0.8;
+}
+
+.traceLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.9;
+}
+
+.traceLayer::before,
+.traceLayer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.traceLayer::before {
+  background:
+    linear-gradient(90deg, transparent 0 9%, rgba(52, 211, 153, 0.22) 9.4% 9.8%, transparent 10.2% 100%),
+    linear-gradient(180deg, transparent 0 21%, rgba(34, 211, 238, 0.16) 21.2% 21.6%, transparent 21.8% 100%),
+    linear-gradient(90deg, transparent 0 52%, rgba(59, 130, 246, 0.18) 52.2% 52.6%, transparent 52.8% 100%),
+    linear-gradient(180deg, transparent 0 56%, rgba(96, 165, 250, 0.16) 56.2% 56.6%, transparent 56.8% 100%),
+    linear-gradient(90deg, transparent 0 82%, rgba(167, 139, 250, 0.16) 82.2% 82.55%, transparent 82.8% 100%);
+  animation: pulseShift 10s ease-in-out infinite alternate;
+}
+
+.traceLayer::after {
+  background:
+    radial-gradient(circle at 9.6% 21.5%, rgba(52, 211, 153, 0.95) 0 3px, transparent 4px),
+    radial-gradient(circle at 52.4% 21.5%, rgba(34, 211, 238, 0.95) 0 3px, transparent 4px),
+    radial-gradient(circle at 52.4% 56.4%, rgba(59, 130, 246, 0.95) 0 3px, transparent 4px),
+    radial-gradient(circle at 82.4% 56.4%, rgba(167, 139, 250, 0.92) 0 3px, transparent 4px),
+    radial-gradient(circle at 82.4% 78%, rgba(34, 211, 238, 0.82) 0 2.5px, transparent 3.5px);
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.25));
+  animation: nodeFlicker 6s ease-in-out infinite;
+}
+
+.meshLayer {
+  position: absolute;
+  inset: 12% 8% 10% 22%;
+  border-radius: 32px;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    linear-gradient(140deg, rgba(15, 23, 42, 0.48), rgba(15, 23, 42, 0.08)),
+    repeating-linear-gradient(135deg, rgba(148, 163, 184, 0.07) 0 2px, transparent 2px 18px);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 30px 80px rgba(2, 6, 23, 0.4);
+  transform: perspective(1000px) rotateY(-24deg) rotateX(12deg);
+  transform-origin: center;
+}
+
+.meshLayer::before,
+.meshLayer::after {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+}
+
+.meshLayer::before {
+  inset: 8%;
+  background:
+    linear-gradient(90deg, rgba(56, 189, 248, 0.18), transparent 28%, transparent 72%, rgba(167, 139, 250, 0.12)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 38%, rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(56, 189, 248, 0.08);
+}
+
+.meshLayer::after {
+  inset: auto 10% 16% 14%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.85), transparent);
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.55);
+  animation: scanline 4.8s linear infinite;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes pulseShift {
+  0% {
+    opacity: 0.6;
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(8px, -6px, 0);
+  }
+}
+
+@keyframes nodeFlicker {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+
+  45% {
+    opacity: 0.55;
+  }
+
+  65% {
+    opacity: 1;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateX(-8%) translateY(0);
+    opacity: 0;
+  }
+
+  15%,
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(6%) translateY(-340px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .meshLayer {
+    inset: 16% 10% 14% 12%;
+    transform: perspective(1000px) rotateY(-16deg) rotateX(10deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .meshLayer {
+    display: none;
+  }
+
+  .circuitBackdrop::before,
+  .circuitBackdrop::after,
+  .traceLayer {
+    opacity: 0.55;
+  }
+}
