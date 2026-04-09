@@ -1,3 +1,5 @@
+"use client";
+
 import { exportPDF } from "../lib/exporters";
 import { GEMINI_CONFIG } from "../config/appConfig";
 import { theme } from "../lib/theme";
