@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { signOut } from "next-auth/react";
+import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
 import { APP_NAME, APP_VERSION, EXAMPLE_REPOS, GEMINI_CONFIG } from "../config/appConfig";
 import { fonts, theme } from "../lib/theme";
 import { buildShareUrl, loadSharedResult, parseSharePayload, saveShareResult } from "../lib/share";
@@ -49,6 +50,7 @@ async function handleLogout() {
 }
 
 export default function App() {
+  const { data: session } = useSession();
   const [url, setUrl] = useState("");
   const [phase, setPhase] = useState("idle");
   const [logs, setLogs] = useState([]);
@@ -327,6 +329,20 @@ export default function App() {
               <span key={c} style={{ fontSize:10, padding:"2px 8px", borderRadius:999, background:T.surface, border:`1px solid ${T.border}`, color:T.green, fontFamily:"'Geist Mono',monospace", fontWeight:600 }}>{c}</span>
             ))}
           </div>
+          {session ? (
+            <Link
+              href="/dashboard"
+              style={{
+                color: T.textMuted,
+                fontSize: 12,
+                fontWeight: 600,
+                textDecoration: "none",
+                fontFamily: "'Geist Mono',monospace",
+              }}
+            >
+              Dashboard
+            </Link>
+          ) : null}
           <button
             onClick={handleLogout}
             style={{
@@ -448,14 +464,3 @@ export default function App() {
     </div>
   );
 }
-
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-
-const { data: session } = useSession();
-
-{session && (
-  <Link href="/dashboard" className="text-sm text-gray-400 hover:text-white transition">
-    Dashboard
-  </Link>
-)}
