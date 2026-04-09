@@ -448,3 +448,14 @@ export default function App() {
     </div>
   );
 }
+
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+
+const { data: session } = useSession();
+
+{session && (
+  <Link href="/dashboard" className="text-sm text-gray-400 hover:text-white transition">
+    Dashboard
+  </Link>
+)}

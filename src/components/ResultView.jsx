@@ -2,6 +2,9 @@ import { exportPDF } from "../lib/exporters";
 import { GEMINI_CONFIG } from "../config/appConfig";
 import { theme } from "../lib/theme";
 import { AnalysisCard, ChatTab, CriticalTab, DependenciesTab, HealthTab, OverviewTab, QuickActions, StructureTab } from "./dashboardBits";
+import { useSaveAnalysis } from "@/hooks/useSaveAnalysis";
+import { useSession } from "next-auth/react";
+import { BookmarkIcon, CheckIcon } from "lucide-react";
 
 function EntrypointTab({ result }) {
   return <div><div style={{ marginBottom: 16 }}><div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: theme.textDim, marginBottom: 6 }}>Execution Flow</div><div style={{ color: theme.text, fontSize: 20, fontWeight: 700, marginBottom: 6 }}>{result.entry_point?.file}</div><div style={{ color: theme.textMuted, fontSize: 13, lineHeight: 1.6 }}>{result.entry_point?.description}</div></div><div style={{ position: "relative", paddingLeft: 30 }}><div style={{ position: "absolute", left: 10, top: 0, bottom: 0, width: 1, background: `linear-gradient(to bottom,${theme.blue}80,transparent)` }} />{(result.entry_point?.execution_flow || []).map((step, index) => <div key={`${step}-${index}`} style={{ position: "relative", marginBottom: 12 }}><div style={{ position: "absolute", left: -26, top: 10, width: 12, height: 12, borderRadius: "50%", background: theme.bg, border: `2px solid ${theme.blue}` }} /><div style={{ background: "#010409", border: `1px solid ${theme.border}`, borderRadius: 8, padding: "10px 14px", display: "flex", gap: 10, alignItems: "flex-start" }}><span style={{ background: theme.blueBg, color: theme.blue, border: `1px solid ${theme.blueBorder}`, borderRadius: 4, padding: "1px 7px", fontSize: 10, fontFamily: "'Geist Mono',monospace", fontWeight: 700, flexShrink: 0, marginTop: 1 }}>{String(index + 1).padStart(2, "0")}</span><span style={{ fontSize: 13, color: theme.text, lineHeight: 1.6, fontFamily: "'Geist Mono',monospace" }}>{step}</span></div></div>)}</div></div>;
@@ -29,6 +32,9 @@ export default function ResultView({
   resetToLanding,
   chatRef,
 }) {
+  const { data: session } = useSession();
+  const { saveAnalysis, saving, saved, error } = useSaveAnalysis();
+
   return (
     <div className="res-in">
       <div className="gh-card" style={{ padding: "22px 24px", marginBottom: 18 }}>
@@ -49,11 +55,41 @@ export default function ResultView({
             </div>
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <button
+              className="gh-btn"
+              style={{
+                background: saved ? theme.greenBg : theme.surface,
+                color: saved ? theme.green : theme.text,
+                borderColor: saved ? theme.greenBorder : theme.border,
+              }}
+              onClick={() =>
+                saveAnalysis({
+                  repoUrl: `https://github.com/${result.repo_name}`,
+                  repoName: result.repo_name,
+                  summary: result.summary,
+                  analysisJson: result,
+                })
+              }
+              disabled={saving || saved}
+            >
+              {saved ? (
+                <>
+                  <CheckIcon size={16} />
+                  Saved
+                </>
+              ) : (
+                <>
+                  <BookmarkIcon size={16} />
+                  {saving ? "Saving..." : session ? "Save Analysis" : "Sign in to Save"}
+                </>
+              )}
+            </button>
             <button className="gh-btn" style={{ background: theme.surface, color: theme.text, borderColor: theme.border }} onClick={() => exportPDF(result)}>Export PDF</button>
             <button className="gh-btn" style={{ background: theme.blueBorder, borderColor: theme.blueBorder }} onClick={handleShare}>Share Report</button>
           </div>
         </div>
         {shareStatus ? <div style={{ marginTop: 12, color: theme.green, fontSize: 12 }}>{shareStatus}</div> : null}
+        {error ? <div style={{ marginTop: 8, color: theme.red, fontSize: 12 }}>{error}</div> : null}
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(145px,1fr))", gap: 10, marginBottom: 18 }}>
